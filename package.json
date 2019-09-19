@@ -1,0 +1,25 @@
+{
+  "name": "process-simulator",
+  "version": "1.0.0",
+  "description": "A process simulator using Electron",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron src/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aesbetancourt/process-simulator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aesbetancourt/process-simulator/issues"
+  },
+  "homepage": "https://github.com/aesbetancourt/process-simulator#readme",
+  "dependencies": {
+    "electron": "^6.0.9",
+    "sweetalert2": "^8.17.6",
+    "vue": "^2.6.10"
+  }
+}
