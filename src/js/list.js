@@ -1,4 +1,7 @@
 const Swal = require('sweetalert2');
+const json = require('../../utils/process.json');
+const fs = require('fs');
+const { remote } = require('electron')
 
 var processes = new Vue({
     el: '#processes',
@@ -12,12 +15,8 @@ var processes = new Vue({
             memory: '',
             time: '',
         },
-        rows: [
-                {"process":"process","pid":"0001","state":"Standby","quantum":"5","priority":"1","memory":"2000","time":"5"},
-                {"process":"process","pid":"0001","state":"Standby","quantum":"5","priority":"1","memory":"2000","time":"5"},
-                {"process":"process","pid":"0001","state":"Standby","quantum":"5","priority":"1","memory":"2000","time":"5"},
-                {"process":"process","pid":"0001","state":"Standby","quantum":"5","priority":"1","memory":"2000","time":"5"},
-            ]
+        rows: json,
+
     },
     methods: {
         addProcess() {
@@ -28,7 +27,7 @@ var processes = new Vue({
                 progressSteps: ['1', '2', '3', '4', '5', '6', '7']
             }).queue([
                 {
-                    title: 'Proceso'
+                    title: 'Nombre del Proceso'
                 },
                 'PID',
                 {
@@ -43,13 +42,8 @@ var processes = new Vue({
                 if (result.value) {
                     Swal.fire({
                         title: 'Proceso añadido a la cola',
-                        html:
-                            'Your answers: <pre><code>' +
-                            JSON.stringify(result.value) +
-                            '</code></pre>',
-                        confirmButtonText: 'Añadir'
+                        confirmButtonText: 'Aceptar'
                     });
-
                     this.newProcessAttrs.process = result.value[0];
                     this.newProcessAttrs.pid = result.value[1];
                     this.newProcessAttrs.state = result.value[2];
@@ -63,10 +57,23 @@ var processes = new Vue({
 
         },
         updateProcess(){
-
+        console.log(json)
         },
         deleteProcess(index){
             this.rows.splice(index, 1);
+            console.log(this.rows)
+        },
+        exportList(){
+            fs.writeFile("utils/process.json", JSON.stringify(this.rows), (err) =>{
+                if (err) throw err;
+                console.log('JSON created!');
+            });
+
         }
     }
 });
+
+function openSimulator() {
+    const { remote } = require('electron')
+    remote.getCurrentWindow().loadFile('views/simulator.html')
+}
