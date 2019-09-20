@@ -19,6 +19,7 @@
   "homepage": "https://github.com/aesbetancourt/process-simulator#readme",
   "dependencies": {
     "electron": "^6.0.9",
+    "plotly.js": "^1.49.5",
     "sweetalert2": "^8.17.6",
     "vue": "^2.6.10"
   }
