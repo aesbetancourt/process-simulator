@@ -36,10 +36,10 @@
                                     <th>Proceso</th>
                                     <th>PID</th>
                                     <th>Estado</th>
-                                    <th>Quantum</th>
                                     <th>Prioridad</th>
                                     <th>Memoria</th>
                                     <th>Tiempo</th>
+                                    <th>Llegada</th>
                                     <th>Modificar</th>
                                 </tr>
                                 </thead>
@@ -48,10 +48,10 @@
                                     <td>{{row.process}}</td>
                                     <td>{{row.pid}}</td>
                                     <td>{{row.state}}</td>
-                                    <td>{{row.quantum}}</td>
                                     <td>{{row.priority}}</td>
                                     <td>{{row.memory}}</td>
                                     <td>{{row.time}}</td>
+                                    <td>{{row.arrival}}</td>
                                     <td>
                                         <button class="btn btn-secondary" @click="updateProcess">
                                             <i class="fa fa-edit"></i>
