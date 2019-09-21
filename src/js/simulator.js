@@ -1,6 +1,6 @@
-processes = require('../../utils/process.json');
+const processes = require('../../utils/process.json');
 
-// FIFO
+// FIFO => sort the entire "processes" object by arrival
 function sortByArrival(arr){
     clock = 0;
     arr.sort((a, b) =>{
@@ -8,7 +8,7 @@ function sortByArrival(arr){
     })
 }
 
-// PRIORITY
+// PRIORITY => sort the entire "processes" object by priority
 function sortByPriority(arr) {
     clock = 0;
     arr.sort((a, b) =>{
@@ -18,25 +18,31 @@ function sortByPriority(arr) {
 // TIME FUNCTIONS (IGNORING QUANTUM)
 let clock = 0;
 function timed() {
-    let ready = [];
     document.getElementById('running').value = processes[clock].pid;
-    ready.push(processes[clock].pid)
     setTimeout(() =>{
-        // console.log(processes[clock].pid);
         document.getElementById('running').value = processes[clock].pid;
-        // console.log(processes[clock].pid);
         document.getElementById('ready').value += processes[clock].pid + " ";
         clock++;
         if (clock < processes.length) timed();
     }, processes[clock].time * 1000);
 
-    if (clock-1 === (processes.length )){
-        document.getElementById('running').value = 'No hay mas procesos';
-    }
 
+    let table = document.getElementsByTagName("table")[0];
+    let tbody = table.getElementsByTagName("tbody")[0];
+    for(let i=0; i<tbody.rows.length; i++){
+        if(tbody.rows[i].cells[0].innerHTML === processes[clock].pid){
+            tbody.deleteRow(i);
+        }
+    }
 }
 
+// QUANTUM FUNCTIONS
+function roundRobin() {
+    let quantum = document.getElementById("quantum");
+    let quantumTime = parseInt(quantum.options[quantum.selectedIndex].text);
+}
 
+// Plan processes according to selected algorithm
 function run() {
     document.getElementById('running').value = '';
     document.getElementById('ready').value = '';
@@ -51,10 +57,14 @@ function run() {
         sortByPriority(processes);
         timed();
     } else if (selection === "3"){
-        console.log("ROUND ROBIN")
+        console.log("ROUND ROBIN");
+        sortByPriority(processes);
+        roundRobin()
     }
 }
 
+
+// Go back to processes list view
 function goBack() {
     const { remote } = require('electron');
     remote.getCurrentWindow().loadFile('views/index.html')
@@ -65,6 +75,17 @@ function goBack() {
 var simulator = new Vue({
     el: '#simulator',
     data: {
-        rows: processes
+        rows: processes,
+        show: true
+    },
+    methods:{
+        reloadTable(){
+            var self = this;
+            self.show = false;
+            Vue.nextTick(function (){
+                console.log("re-render");
+                self.show = true;
+            })
+        }
     }
 });
