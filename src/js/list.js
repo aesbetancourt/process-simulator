@@ -64,9 +64,8 @@ var processes = new Vue({
         exportList(){
             fs.writeFile("utils/process.json", JSON.stringify(this.rows), (err) =>{
                 if (err) throw err;
-                console.log('JSON created!');
+                console.log('JSON updated!');
             });
-
         }
     }
 });
