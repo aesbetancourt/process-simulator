@@ -1,8 +1,8 @@
 const Swal = require('sweetalert2');
-const json = require('../../utils/process.json');
+const json = require('../../utils/fake_processes.json');
 const fs = require('fs');
 
-var processes = new Vue({
+var vm = new Vue({
     el: '#processes',
     data: {
         newProcessAttrs: {
@@ -55,14 +55,14 @@ var processes = new Vue({
 
         },
         updateProcess(){
-            console.log(json)
+            console.log(json);
         },
         deleteProcess(index){
             this.rows.splice(index, 1);
             console.log(this.rows)
         },
         exportList(){
-            fs.writeFile("utils/process.json", JSON.stringify(this.rows), (err) =>{
+            fs.writeFile("utils/fake_processes.json", JSON.stringify(this.rows), (err) =>{
                 if (err) throw err;
                 console.log('JSON updated!');
             });
