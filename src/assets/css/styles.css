@@ -1,5 +1,42 @@
 #panel {
-  width: 100%;
+  background-color: #dfe2e6;
+  padding: 15px;
   height: 100vh;
+  width: 100%;
+}
+
+
+.btn.btn-primary.controls {
+  padding: 6px;
+  margin: 5px 10px 10px 0px;
+  font-size: 16px;
+  font-family: Ubuntu, sans-serif;
+}
+
+
+
+.subheadings {
+  font-family: Ubuntu, sans-serif;
+  font-size: 37px;
+}
+
+.states {
+  font-family: Ubuntu, sans-serif;
+  font-size: 23px;
+}
+
+.coolbtn {
+  margin-right: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-family: Ubuntu, sans-serif;
+}
+
+.titleheadings {
+  font-family: Ubuntu, sans-serif;
+}
+
+textarea{
+  resize: none;
 }
 

@@ -1,139 +1,164 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Simulador de Procesos</title>
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu">
+    <link rel="stylesheet" href="../assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 
 <body>
     <section id="panel">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <button type="button" class="btn btn-primary" onclick="goBack()">
-                        <i class="fas fa-angle-left"></i>
-                        Volver
-                    </button>
-                    <h1>Simulador</h1>
-                    <div class="row">
-                        <button class="btn btn-primary" type="button" onclick="run()">Iniciar</button>
-                        <button class="btn btn-primary" type="button">Detener</button>
-                        <div class="col">
-                            <label for="algorithm">Planificacion: </label>
-                            <select id="algorithm">
-                                    <option value="1" selected="selected">FIFO</option>
-                                    <option value="2">Prioridad</option>
-                                    <option value="3">Round Robin</option>
-                            </select>
-                        </div>
-                        <div class="col">
-                            <label for="quantum">Quantum: </label>
-                                <select id="quantum">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                        <option>6</option>
-                                        <option>7</option>
-                                        <option>8</option>
-                                        <option>9</option>
-                                        <option>10</option>
-                                </select>
-                        </div>
+        <div class="row">
+            <div class="col">
+                <h1 class="titleheadings">Planificacion de Procesos</h1>
+            </div>
+            <button class="btn btn-primary coolbtn" type="button" onclick="goBack()">
+                <i class="fas fa-chevron-circle-left"></i>
+                Volver
+            </button>
+        </div>
+        <div class="row" id="simulator">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <h3 class="subheadings">Algoritmo</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button class="btn btn-primary coolbtn" type="button" onclick="run()">
+                            <i class="fas fa-play"></i>
+                            Iniciar
+                        </button>
+                        <button class="btn btn-primary coolbtn" type="button">
+                            <i class="fas fa-stop"></i>
+                            Detener
+                        </button>
+                        <button class="btn btn-primary coolbtn" type="button" @click="reloadTable">
+                            <i class="fas fa-redo-alt"></i>
+                            Recargar
+                        </button>
+                        <select id="algorithm">
+                            <option value="1" selected="selected">FIFO</option>
+                            <option value="2">Prioridad</option>
+                            <option value="3">Round Robin</option>
+                        </select>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <h4 class="states">Listos</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="width:360px; height:200px; overflow:auto;">
+                        <table class="table table-striped table-bordered" cellspacing="0" width="100%" v-if="show">
+                            <thead>
+                            <tr>
+                                <th>PID</th>
+                                <th>Llegada</th>
+                                <th>Prioridad</th>
+                                <th>Tiempo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="row in rows" v-if="show">
+                                <td>{{row.pid}}</td>
+                                <td>{{row.arrival}}</td>
+                                <td>{{row.priority}}</td>
+                                <td>{{row.time}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <h1>Graph Here!</h1>
                     </div>
                 </div>
             </div>
-            <div class="row" id="simulator">
-                <button class="btn btn-primary" type="button" @click="reloadTable">reload table</button>
-                <div class="col">
-                    <div class="row">
-                        <div class="col">
-                            <h1>Esperando</h1>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col" style="width:360px; height:200px; overflow:auto;">
-                            <table class="table table-striped table-bordered" cellspacing="0" width="100%" v-if="show">
-                                <thead>
-                                <tr>
-                                    <th>PID</th>
-                                    <th>Llegada</th>
-                                    <th>Prioridad</th>
-                                    <th>Tiempo</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="row in rows" v-if="show">
-                                    <td>{{row.pid}}</td>
-                                    <td>{{row.arrival}}</td>
-                                    <td>{{row.priority}}</td>
-                                    <td>{{row.time}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <h3 class="subheadings">Estados Basicos</h3>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="row">
-                        <div class="col">
-                            <h1>Ejecutando</h1>
-                        </div>
+                <div class="row">
+                    <div class="col">
+                        <h1 class="states">Ejecutando</h1>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <!--  running processes here!  -->
-                            <textarea readonly id="running">
-                            </textarea>
-                        </div>
+                    <div class="col">
+                        <h1 class="states">Bloqueados</h1>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="row">
-                        <div class="col">
-                            <h1>Listos</h1>
-                        </div>
+                <div class="row">
+                    <div class="col">
+                        <textarea readonly id="running"></textarea>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <!--   ready processes here!   -->
-                            <textarea readonly id="ready">
-                            </textarea>
-                        </div>
+                    <div class="col">
+                        <textarea></textarea>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="row">
-                        <div class="col">
-                            <h1>Bloqueados</h1>
-                        </div>
+                <div class="row">
+                    <div class="col">
+                        <h1 class="states">Controles</h1>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <!--   locked processes here!   -->
-                            <textarea readonly>
-                            </textarea>
-                        </div>
+                    <div class="col">
+                        <h1 class="states">Terminados</h1>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div id="chart">
-                        <!-- Plotly.js here! soon-->
+                <div class="row">
+                    <div class="col">
+                        <button class="btn btn-primary coolbtn" type="button">
+                            <i class="fas fa-pause"></i>
+                            Parar
+                        </button>
+                        <button class="btn btn-primary coolbtn" type="button">
+                            <i class="fas fa-skull-crossbones"></i>
+                            Matar
+                        </button>
+                    </div>
+                    <div class="col">
+                        <textarea readonly id="ready"></textarea>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <h3 class="subheadings">Estados Intermedios</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <h1 class="states">Susp. Bloq</h1>
+                    </div>
+                    <div class="col">
+                        <h1 class="states">Susp. Listo</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <textarea></textarea>
+                    </div>
+                    <div class="col">
+                        <textarea></textarea>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="../../node_modules/vue/dist/vue.js"></script>
     <!-- Custom JS -->
     <script src="../js/simulator.js"></script>
 </body>
+
 </html>
