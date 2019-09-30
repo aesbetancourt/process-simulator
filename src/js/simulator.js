@@ -1,4 +1,4 @@
-const processes = require('../../utils/process.json');
+const processes = require('../../utils/fake_processes.json');
 
 // FIFO => sort the entire "processes" object by arrival
 function sortByArrival(arr){
@@ -67,12 +67,12 @@ function run() {
 // Go back to processes list view
 function goBack() {
     const { remote } = require('electron');
-    remote.getCurrentWindow().loadFile('views/index.html')
+    remote.getCurrentWindow().loadFile('views/list.html')
 }
 
 
 
-var simulator = new Vue({
+var vm = new Vue({
     el: '#simulator',
     data: {
         rows: processes,
