@@ -21,6 +21,10 @@
                         <h1 class="titleheadings">Procesos Actuales:</h1>
                         <hr>
                     </div>
+                    <button class="btn btn-primary coolbtn" onclick="reload()" style="position: fixed; left: 670px">
+                        <i class="fas fa-sync-alt"></i>
+                        Recargar
+                    </button>
                     <button class="btn btn-primary coolbtn" @click="showInfoPopUp" style="position: fixed; left: 800px">
                         <i class="fab fa-windows" v-if="so === 'win32'"></i>
                         <i class="fab fa-linux" v-else></i>
@@ -62,14 +66,16 @@
             </div>
             <hr>
         </div>
-        <div class="row" style="padding-left: 10px; padding-right: 10px">
-            <h6 class="titleheadings">Uso de RAM</h6>
-            <div class="col" id="cpu-chart" style="height:150px; width: 50%;">
+        <div class="row" style="margin-left: 10px; margin-right: 20px">
+<!--            <h6 class="titleheadings">Uso de CPU</h6>-->
+            <div class="col" id="cpu-chart" style="height:130px">
                 <!--   Chart -->
             </div>
-            <h6 class="titleheadings">Uso de CPU</h6>
-
-            <div class="col" id="ram-chart" style="height:150px; width: 50%;">
+            <div class="col">
+                <div style="border-left:1px solid #b7b9cc;height:170px; position: absolute; right: 23px"></div>
+            </div>
+<!--            <h6 class="titleheadings">Uso de RAM</h6>-->
+            <div class="col" id="ram-chart" style="height:130px; ">
                 <!--   Chart -->
             </div>
         </div>
@@ -78,6 +84,7 @@
 
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="../../node_modules/vue/dist/vue.js"></script>
+    <script src="../../node_modules/plotly.js/dist/plotly.min.js"></script>
     <!--  Custom JS  -->
     <script src="../js/processes.js"></script>
 </body>

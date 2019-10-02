@@ -3,12 +3,6 @@ const Swal = require('sweetalert2');
 const os 	= require('os-utils');
 
 
-
-// function getMemUsage() {
-//     let usedmem = os.totalmem() - os.freemem();
-//     return ((usedmem * 100)/os.totalmem()).toFixed(2);
-
-
 var vm = new Vue({
     el: '#processes',
     data: {
@@ -77,3 +71,113 @@ var vm = new Vue({
         this.getProcess()
     }
 });
+
+
+
+
+function getMemUsagePercent() {
+    let usedmem = os.totalmem() - os.freemem();
+    return ((usedmem * 100) / os.totalmem()).toFixed(1);
+}
+
+
+Plotly.plot('ram-chart', [{
+    y: [getMemUsagePercent()],
+    type: 'line',
+
+}], {
+    name: 'MEM',
+    height: 170,
+    width: 420,
+    margin: {
+        l: 30,
+        r: 20,
+        b: 20,
+        t: 10,
+        pad: 0
+    }
+}, {
+    displayModeBar: false
+});
+
+let cnt = 0;
+
+setInterval(function () {
+    Plotly.extendTraces('ram-chart', { y: [[getMemUsagePercent()]]}, [0]);
+    cnt++;
+    if (cnt > 10){
+        Plotly.relayout('ram-chart', {
+            xaxis: {
+                range: [cnt-10, cnt]
+            }
+        })
+    }
+}, 2000);
+
+
+
+//
+Plotly.plot('cpu-chart', [{
+    y: [getMemUsagePercent()],
+    type: 'line',
+
+}], {
+    name: 'CPU',
+    height: 170,
+    width: 420,
+    margin: {
+        l: 30,
+        r: 20,
+        b: 20,
+        t: 10,
+        pad: 0
+    }
+}, {
+    displayModeBar: false
+});
+
+let cnt2 = 0;
+setInterval(function () {
+    Plotly.extendTraces('cpu-chart', { y: [[getMemUsagePercent()]]}, [0]);
+    cnt2++;
+    if (cnt > 10){
+        Plotly.relayout('cpu-chart', {
+            xaxis: {
+                range: [cnt-10, cnt]
+            }
+        })
+    }
+}, 2000);
+
+
+
+let timerInterval;
+Swal.fire({
+    title: 'Buscando procesos...',
+    html: 'Espera un segundo',
+    timer: 8000,
+    onBeforeOpen: () => {
+        Swal.showLoading();
+        timerInterval = setInterval(() => {
+            Swal.getContent().querySelector('strong')
+                .textContent = Swal.getTimerLeft()
+        }, 100)
+    },
+    onClose: () => {
+        clearInterval(timerInterval)
+    }
+}).then((result) => {
+    if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.timer
+    ) {
+        console.log('I was closed by the timer')
+    }
+});
+
+
+
+function reload() {
+    const { remote } = require('electron');
+    remote.getCurrentWindow().loadFile('views/processes.html')
+}
