@@ -1,9 +1,18 @@
 const si = require('systeminformation');
 const Swal = require('sweetalert2');
+const os 	= require('os-utils');
+
+
+
+// function getMemUsage() {
+//     let usedmem = os.totalmem() - os.freemem();
+//     return ((usedmem * 100)/os.totalmem()).toFixed(2);
+
 
 var vm = new Vue({
     el: '#processes',
     data: {
+        // PROCESSES
         rows: null,
         //CPU
         cpu_name: null,
@@ -17,8 +26,6 @@ var vm = new Vue({
         //DISKS
         disk_type: null,
         disk_size: null,
-
-
     },
     methods:{
         getProcess(){
@@ -59,12 +66,11 @@ var vm = new Vue({
                 '<strong>Distribucion: </strong>' + this.dist + '<br>'+
                 '<strong>Arquitectura: </strong>' + this.arch + '<br>'+
                 '<strong>CPU: </strong>' + this.cpu_name + ' ' + this.cpu_speed + ' GHz<br>'+
-                '<strong>Memoria: </strong>' + this.total_ram + '<br>'+
-                '<strong>DISCO: </strong>' + this.disk_type + ' ' + this.disk_size + '<br><hr><div>',
-                animation: false
+                '<strong>Memoria: </strong>' + (parseFloat(this.total_ram)/1e+6).toFixed(2) + 'MB<br>'+
+                '<strong>DISCO: </strong>' + this.disk_type + ' ' + (parseFloat(this.disk_size)/1e+9).toFixed(2) + 'GB<br><hr><div>',
+                animation: true
             })
         }
-
     },
     created() {
         this.getSystemInfo();
