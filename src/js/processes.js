@@ -22,12 +22,14 @@ var vm = new Vue({
         disk_size: null,
     },
     methods:{
+        // Returns a list of objects of the processes running
         getProcess(){
           setInterval(()=>{
               si.processes()
                   .then(data =>{this.rows = data.list})
           }, 3000)
         },
+        // Returns important information about the system
         getSystemInfo(){
             si.cpu()
                 .then(data =>{
@@ -50,6 +52,7 @@ var vm = new Vue({
                     this.disk_size = data[0].size;
                 })
         },
+        // Show a message with system information
         showInfoPopUp(){
             Swal.fire({
                 title: 'Informacion del sistema',
@@ -67,44 +70,79 @@ var vm = new Vue({
         }
     },
     created() {
+        // When the app is created, the functions previously instantiated are executed
         this.getSystemInfo();
         this.getProcess()
     }
 });
 
 
-
-
+// Returns the use of the RAM as a percentage in the specific time
+let cont = 0;
 function getMemUsagePercent() {
-    let usedmem = os.totalmem() - os.freemem();
-    return ((usedmem * 100) / os.totalmem()).toFixed(1);
+    let used_memory = os.totalmem() - os.freemem();
+    if (cont === 0){
+        cont = -1;
+        return 0;
+    }
+    return ((used_memory * 100) / os.totalmem()).toFixed(1);
 }
 
+// Returns the use of the CPU as a percentage in the specific time
+let usage = 0;
+function getCPUUsagePercent(){
+    os.cpuUsage(function(data){
+        usage = data * 100;
+    });
+    return usage;
+}
 
-Plotly.plot('ram-chart', [{
-    y: [getMemUsagePercent()],
-    type: 'line',
-
-}], {
-    name: 'MEM',
-    height: 170,
+// Layout of the charts
+const layout = {
+    xaxis: {
+        title: 'Tiempo (S)'
+    },
+    yaxis: {
+        title: '%'
+    },
+    height: 150,
     width: 420,
     margin: {
-        l: 30,
+        l: 40,
         r: 20,
-        b: 20,
+        b: 30,
         t: 10,
         pad: 0
     }
-}, {
-    displayModeBar: false
-});
+};
 
+// CPU usage chart
+Plotly.plot('cpu-chart', [{
+    y: [getCPUUsagePercent()],
+    type: 'line',
+}], layout, {displayModeBar: false});
+
+// RAM usage chart
+Plotly.plot('ram-chart', [{
+    y: [getMemUsagePercent()],
+    type: 'line',
+}], layout, {displayModeBar: false});
+
+// Update interval of tables with new data (10s)
 let cnt = 0;
-
 setInterval(function () {
-    Plotly.extendTraces('ram-chart', { y: [[getMemUsagePercent()]]}, [0]);
+    // Extend traces in CPU chart by 10s
     cnt++;
+    Plotly.extendTraces('cpu-chart', { y: [[getCPUUsagePercent()]]}, [0]);
+    if (cnt > 10){
+        Plotly.relayout('cpu-chart', {
+            xaxis: {
+                range: [cnt-10, cnt]
+            }
+        })
+    }
+    // Extend traces in RAM chart by 10s
+    Plotly.extendTraces('ram-chart', { y: [[getMemUsagePercent()]]}, [0]);
     if (cnt > 10){
         Plotly.relayout('ram-chart', {
             xaxis: {
@@ -114,43 +152,7 @@ setInterval(function () {
     }
 }, 2000);
 
-
-
-//
-Plotly.plot('cpu-chart', [{
-    y: [getMemUsagePercent()],
-    type: 'line',
-
-}], {
-    name: 'CPU',
-    height: 170,
-    width: 420,
-    margin: {
-        l: 30,
-        r: 20,
-        b: 20,
-        t: 10,
-        pad: 0
-    }
-}, {
-    displayModeBar: false
-});
-
-let cnt2 = 0;
-setInterval(function () {
-    Plotly.extendTraces('cpu-chart', { y: [[getMemUsagePercent()]]}, [0]);
-    cnt2++;
-    if (cnt > 10){
-        Plotly.relayout('cpu-chart', {
-            xaxis: {
-                range: [cnt-10, cnt]
-            }
-        })
-    }
-}, 2000);
-
-
-
+// Display a waiting message while data is loading
 let timerInterval;
 Swal.fire({
     title: 'Buscando procesos...',
@@ -168,15 +170,13 @@ Swal.fire({
     }
 }).then((result) => {
     if (
-        /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.timer
     ) {
         console.log('I was closed by the timer')
     }
 });
 
-
-
+// Refresh this page on button event
 function reload() {
     const { remote } = require('electron');
     remote.getCurrentWindow().loadFile('views/processes.html')
