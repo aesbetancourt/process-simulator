@@ -12,7 +12,8 @@ var vm = new Vue({
             priority: '',
             memory: '',
             time: '',
-            arrival: ''
+            arrival: '',
+            quantum: ''
         },
         rows: json,
     },
@@ -22,7 +23,7 @@ var vm = new Vue({
                 input: 'text',
                 confirmButtonText: 'Next &rarr;',
                 showCancelButton: true,
-                progressSteps: ['1', '2', '3', '4', '5', '6', '7']
+                progressSteps: ['1', '2', '3', '4', '5', '6', '7', '8']
             }).queue([
                 {
                     title: 'Nombre del Proceso'
@@ -35,7 +36,8 @@ var vm = new Vue({
                 'Prioridad',
                 'Memoria',
                 'Tiempo',
-                'Llegada'
+                'Llegada',
+                'Quantum'
             ]).then((result) => {
                 if (result.value) {
                     Swal.fire({
@@ -49,6 +51,7 @@ var vm = new Vue({
                     this.newProcessAttrs.memory = result.value[4];
                     this.newProcessAttrs.time = result.value[5];
                     this.newProcessAttrs.arrival = result.value[6];
+                    this.newProcessAttrs.quantum = result.value[7];
                     this.rows.push(JSON.parse(JSON.stringify(this.newProcessAttrs)))
                 }
             })
