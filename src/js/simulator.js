@@ -63,17 +63,17 @@ function timed(remainingArr) {
 }
 
 // QUANTUM FUNCTIONS
-
 // General Quantum
 function roundRobin(general_quantum, cycle, residual, remaining) {
     // let table = document.getElementsByTagName("table")[0];
     // let tbody = table.getElementsByTagName("tbody")[0];
-    let suspended = [];
-    let finished = [];
     if (general_quantum){
+        console.log("General");
         let q = document.getElementById("quantum");
         let quantum = parseInt(q.options[q.selectedIndex].text);
         let steps = iterations(quantum, remaining);
+        let suspended = [];
+        let finished = [];
 
         function repeat() {
             document.getElementById('suspended').value = suspended;
@@ -83,7 +83,7 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                 remaining[cycle] -= quantum;
                 document.getElementById('running').value = processes[cycle].pid;
                 suspended.push(processes[cycle].pid);
-            } else if (quantum >= remaining[cycle]){
+            } else if (quantum >= remaining[cycle]) {
                 residual = remaining[cycle];
                 remaining[cycle] = 0;
                 finished.push(processes[cycle].pid);
@@ -117,21 +117,85 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
         }
         repeat()
     } else {
-        // Variable Quantum
+        let quantum = quantums(processes);
+        let steps = iterations(quantum, remaining);
+        let suspended = [];
+        let finished = [];
+        function repeatQuantum() {
+            document.getElementById('suspended').value = suspended;
+            document.getElementById('finished').value = finished;
+            if (remaining[cycle] > quantum[cycle]){
+                residual = quantum[cycle];
+                remaining[cycle] -= quantum[cycle];
+                document.getElementById('running').value = processes[cycle].pid;
+                suspended.push(processes[cycle].pid);
+            } else if (quantum[cycle] >= remaining[cycle]){
+                residual = remaining[cycle];
+                remaining[cycle] = 0;
+                finished.push(processes[cycle].pid);
+                document.getElementById('running').value = processes[cycle].pid;
+            } else {
+                for (let i = 0; i < remaining.length; i++) {
+                    if (remaining[i] >= quantum[i]){
+                        residual = quantum[i];
+                        remaining[i] -= quantum[i]
+                    } else if (remaining[i] !== 0){
+                        residual = remaining[i];
+                        remaining[i] -= remaining[i];
+                        if (remaining[i] === 0){
+                            suspended.splice(0,1);
+                            finished.push(processes[i].pid);
+                        }
+                        document.getElementById('running').value = processes[i].pid;
+                        break
+                    }
+                }
+                if (remaining.every(checkZeros)){
+                    document.getElementById('running').value = "No hay procesos pendientes por ejecutar";
+                    document.getElementById('suspended').value = suspended;
+                    document.getElementById('finished').value = finished;
+                }
+            }
+            setTimeout(() => {
+                cycle++;
+                // console.log("quantum",quantum);
+                // console.log("Suspended ",suspended);
+                if (cycle < steps) repeatQuantum();
+            }, 1000 * residual)
+        }
+        repeatQuantum();
     }
 
 }
 
 function iterations(quantum, arr) {
     let steps = 0;
-    for (let i = 0; i < arr.length; i++) {
-        steps += arr[i]/quantum;
-        if (steps < 1){
-            steps = 1
+    if (Array.isArray(quantum)){
+        for (let i = 0; i < arr.length ; i++) {
+            steps += arr[i]/quantum[i];
+            if (steps < 1){
+                steps = 1
+            }
+            steps = Math.ceil(steps)
         }
-        steps = Math.ceil(steps)
+    } else {
+        for (let i = 0; i < arr.length; i++) {
+            steps += arr[i]/quantum;
+            if (steps < 1){
+                steps = 1
+            }
+            steps = Math.ceil(steps)
+        }
     }
     return steps
+}
+
+function quantums(objArr) {
+    let remaining = [];
+    for (let i = 0; i < objArr.length ; i++) {
+        remaining.push(parseInt(objArr[i].quantum))
+    }
+    return remaining;
 }
 
 function remainingTime(objArr) {
@@ -152,8 +216,8 @@ function run() {
     keepGoing = true;
     document.getElementById('running').value = '';
     document.getElementById('finished').value = '';
-    let algo = document.getElementById("algorithm");
-    let selection = algo.options[algo.selectedIndex].value;
+    let algorithm = document.getElementById("algorithm");
+    let selection = algorithm.options[algorithm.selectedIndex].value;
     if (selection === "1"){
         // console.log("FIFO");
         let remaining = remainingTime(processes);
@@ -173,8 +237,9 @@ function run() {
         let residual = 0;
 
         let q = document.getElementById("quantum");
-        let type = q.options[q.selectedIndex].value;
+        let type = q.options[q.selectedIndex].text;
         if (type !== "No Aplica"){general_quantum = true}
+
         roundRobin(general_quantum, cycle, residual, remaining)
     } else if (selection === "4"){
         // console.log("SJF");
