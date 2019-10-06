@@ -31,16 +31,26 @@ function sortByBurst(arr) {
 let keepGoing = true;
 // TIME FUNCTIONS (IGNORING QUANTUM)
 let clock = 0;
-function timed() {
-    document.getElementById('running').value = processes[clock].pid;
-    if (keepGoing){
-        setTimeout(() =>{
-            document.getElementById('running').value = processes[clock].pid;
-            document.getElementById('finished').value += processes[clock].pid + " ";
-            clock++;
-            if (clock < processes.length) timed();
-        }, processes[clock].burst * 1000);
+function timed(remainingArr) {
+    let finished = [];
+    function repeat(){
+        document.getElementById('finished').value = finished;
+        document.getElementById('running').value = processes[clock].pid;
+        finished.push(processes[clock].pid);
+        remainingArr[clock] -= remainingArr[clock];
+        if (keepGoing){
+            setTimeout(() =>{
+                // console.log(remainingArr);
+                if (remainingArr.every(checkZeros)){
+                    document.getElementById('running').value = "No hay procesos pendientes por ejecutar";
+                }
+                clock++;
+                if (clock <= processes.length) repeat();
+            }, processes[clock].burst * 1000);
+
+        }
     }
+    repeat();
 
     let table = document.getElementsByTagName("table")[0];
     let tbody = table.getElementsByTagName("tbody")[0];
@@ -55,7 +65,6 @@ function timed() {
 // QUANTUM FUNCTIONS
 
 // General Quantum
-
 function roundRobin(general_quantum, cycle, residual, remaining) {
     // let table = document.getElementsByTagName("table")[0];
     // let tbody = table.getElementsByTagName("tbody")[0];
@@ -92,9 +101,6 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                         break
                     }
                 }
-                function checkZeros(num) {
-                    return num === 0;
-                }
                 if (remaining.every(checkZeros)){
                     document.getElementById('running').value = "No hay procesos pendientes por ejecutar";
                     document.getElementById('suspended').value = suspended;
@@ -128,6 +134,18 @@ function iterations(quantum, arr) {
     return steps
 }
 
+function remainingTime(objArr) {
+    let remaining = [];
+    for (let i = 0; i < objArr.length ; i++) {
+        remaining.push(parseInt(objArr[i].burst))
+    }
+    return remaining
+}
+
+function checkZeros(num) {
+    return num === 0;
+}
+
 
 // Plan processes according to selected algorithm
 function run() {
@@ -138,19 +156,20 @@ function run() {
     let selection = algo.options[algo.selectedIndex].value;
     if (selection === "1"){
         // console.log("FIFO");
+        let remaining = remainingTime(processes);
         sortByArrival(processes);
-        timed();
+        timed(remaining);
     } else if (selection === "2"){
         // console.log("PRIORITY");
+        let remaining = remainingTime(processes);
         sortByPriority(processes);
-        timed();
+        timed(remaining);
     } else if (selection === "3"){
         // console.log("ROUND ROBIN");
         sortByArrival(processes);
         let general_quantum = false;
+        let remaining = remainingTime(processes);
         let cycle = 0;
-        let remaining = [];
-        for (let i = 0; i < processes.length ; i++) {remaining.push(parseInt(processes[i].burst))}
         let residual = 0;
 
         let q = document.getElementById("quantum");
@@ -159,8 +178,9 @@ function run() {
         roundRobin(general_quantum, cycle, residual, remaining)
     } else if (selection === "4"){
         // console.log("SJF");
+        let remaining = remainingTime(processes);
         sortByBurst(processes);
-        timed();
+        timed(remaining);
     }
 }
 
