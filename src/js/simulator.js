@@ -90,7 +90,10 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                 document.getElementById('running').value = processes[cycle].pid;
             } else {
                 for (let i = 0; i < remaining.length; i++) {
-                    if (remaining[i] !== 0){
+                    if (remaining[i] >= quantum){
+                        residual = quantum;
+                        remaining[i] -= quantum;
+                    } else if (remaining[i] !== 0){
                         residual = remaining[i];
                         remaining[i] -= remaining[i];
                         if (remaining[i] === 0){
@@ -138,7 +141,7 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                 for (let i = 0; i < remaining.length; i++) {
                     if (remaining[i] >= quantum[i]){
                         residual = quantum[i];
-                        remaining[i] -= quantum[i]
+                        remaining[i] -= quantum[i];
                     } else if (remaining[i] !== 0){
                         residual = remaining[i];
                         remaining[i] -= remaining[i];
