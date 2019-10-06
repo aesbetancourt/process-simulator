@@ -21,7 +21,7 @@ function sortByPriority(arr) {
 function sortByBurst(arr) {
     clock = 0;
     arr.sort((a, b) =>{
-        return a.time - b.time
+        return a.burst - b.burst
     })
 }
 
@@ -34,7 +34,7 @@ function timed() {
         document.getElementById('finished').value += processes[clock].pid + " ";
         clock++;
         if (clock < processes.length) timed();
-    }, processes[clock].time * 1000);
+    }, processes[clock].burst * 1000);
 
 
     let table = document.getElementsByTagName("table")[0];
@@ -143,7 +143,7 @@ function run() {
         let cycle = 0;
         let remaining = [];
         for (let i = 0; i < processes.length ; i++) {
-            remaining.push(parseInt(processes[i].time))
+            remaining.push(parseInt(processes[i].burst))
         }
         let residual = 0;
 

@@ -11,7 +11,7 @@ var vm = new Vue({
             state: '',
             priority: '',
             memory: '',
-            time: '',
+            burst: '',
             arrival: '',
             quantum: ''
         },
@@ -49,7 +49,7 @@ var vm = new Vue({
                     this.newProcessAttrs.state = result.value[2];
                     this.newProcessAttrs.priority = result.value[3];
                     this.newProcessAttrs.memory = result.value[4];
-                    this.newProcessAttrs.time = result.value[5];
+                    this.newProcessAttrs.burst = result.value[5];
                     this.newProcessAttrs.arrival = result.value[6];
                     this.newProcessAttrs.quantum = result.value[7];
                     this.rows.push(JSON.parse(JSON.stringify(this.newProcessAttrs)))
