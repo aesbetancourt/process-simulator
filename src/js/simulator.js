@@ -1,5 +1,6 @@
 const processes = require('../../utils/fake_processes.json');
 
+
 // FIFO => sort the entire "processes" object by arrival
 function sortByArrival(arr){
     clock = 0;
@@ -7,6 +8,7 @@ function sortByArrival(arr){
         return a.arrival - b.arrival
     })
 }
+
 
 // PRIORITY => sort the entire "processes" object by priority
 function sortByPriority(arr) {
@@ -25,17 +27,20 @@ function sortByBurst(arr) {
     })
 }
 
+
+let keepGoing = true;
 // TIME FUNCTIONS (IGNORING QUANTUM)
 let clock = 0;
 function timed() {
     document.getElementById('running').value = processes[clock].pid;
-    setTimeout(() =>{
-        document.getElementById('running').value = processes[clock].pid;
-        document.getElementById('finished').value += processes[clock].pid + " ";
-        clock++;
-        if (clock < processes.length) timed();
-    }, processes[clock].burst * 1000);
-
+    if (keepGoing){
+        setTimeout(() =>{
+            document.getElementById('running').value = processes[clock].pid;
+            document.getElementById('finished').value += processes[clock].pid + " ";
+            clock++;
+            if (clock < processes.length) timed();
+        }, processes[clock].burst * 1000);
+    }
 
     let table = document.getElementsByTagName("table")[0];
     let tbody = table.getElementsByTagName("tbody")[0];
@@ -96,11 +101,13 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                     document.getElementById('finished').value = finished;
                 }
             }
-            setTimeout(() => {
-                cycle++;
-                console.log(remaining);
-                if (cycle < steps) repeat()
-            }, 1000 * residual);
+            if (keepGoing){
+                setTimeout(() => {
+                    cycle++;
+                    // console.log(remaining);
+                    if (cycle < steps) repeat()
+                }, 1000 * residual);
+            }
         }
         repeat()
     } else {
@@ -124,6 +131,7 @@ function iterations(quantum, arr) {
 
 // Plan processes according to selected algorithm
 function run() {
+    keepGoing = true;
     document.getElementById('running').value = '';
     document.getElementById('finished').value = '';
     let algo = document.getElementById("algorithm");
@@ -137,24 +145,20 @@ function run() {
         sortByPriority(processes);
         timed();
     } else if (selection === "3"){
-        console.log("ROUND ROBIN");
+        // console.log("ROUND ROBIN");
         sortByArrival(processes);
         let general_quantum = false;
         let cycle = 0;
         let remaining = [];
-        for (let i = 0; i < processes.length ; i++) {
-            remaining.push(parseInt(processes[i].burst))
-        }
+        for (let i = 0; i < processes.length ; i++) {remaining.push(parseInt(processes[i].burst))}
         let residual = 0;
 
         let q = document.getElementById("quantum");
         let type = q.options[q.selectedIndex].value;
-        if (type !== "No Aplica"){
-            general_quantum = true
-        }
+        if (type !== "No Aplica"){general_quantum = true}
         roundRobin(general_quantum, cycle, residual, remaining)
     } else if (selection === "4"){
-        console.log("SJF");
+        // console.log("SJF");
         sortByBurst(processes);
         timed();
     }
@@ -167,6 +171,15 @@ function goBack() {
     remote.getCurrentWindow().loadFile('views/list.html')
 }
 
+function stop() {
+    keepGoing = false;
+}
+
+function reload() {
+    document.getElementById('running').value = '';
+    document.getElementById('finished').value = '';
+    document.getElementById('suspended').value = '';
+}
 
 var vm = new Vue({
     el: '#simulator',
