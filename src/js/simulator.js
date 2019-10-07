@@ -344,17 +344,17 @@ function reload() {
     document.getElementById('running').value = '';
     document.getElementById('finished').value = '';
     document.getElementById('suspended').value = '';
+    document.getElementById('susp-ready').value = '';
+    document.getElementById('susp-lock').value = '';
 }
 
 //
 function pause() {
-    stop()
-    
-
+    console.log("Pause")
 }
 
 function kill() {
-
+    console.log("kill")
 }
 
 
