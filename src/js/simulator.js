@@ -1,4 +1,5 @@
 const processes = require('../../utils/fake_processes.json');
+const mem = require('../../utils/memory.json');
 
 
 // FIFO => sort the entire "processes" object by arrival
@@ -27,13 +28,24 @@ function sortByBurst(arr) {
     })
 }
 
-
+let finished = [];
 let keepGoing = true;
 // TIME FUNCTIONS (IGNORING QUANTUM)
 let clock = 0;
+
 function timed(remainingArr) {
-    let finished = [];
+    let table = document.getElementsByTagName("table")[0];
+    let tbody = table.getElementsByTagName("tbody")[0];
     function repeat(){
+        if (clock !== 0){
+            for(let i=0; i< tbody.rows.length; i++){
+                if(tbody.rows[i].cells[0].innerHTML === processes[clock-1].pid){
+                    tbody.rows[i].cells[5].innerHTML = 'Terminado';
+                    tbody.rows[i].cells[5].style.backgroundColor="#2d5faa";
+                    tbody.rows[i].cells[5].style.color="#b1b2b8";
+                }
+            }
+        }
         document.getElementById('finished').value = finished;
         document.getElementById('running').value = processes[clock].pid;
         finished.push(processes[clock].pid);
@@ -52,30 +64,44 @@ function timed(remainingArr) {
     }
     repeat();
 
-    let table = document.getElementsByTagName("table")[0];
-    let tbody = table.getElementsByTagName("tbody")[0];
-    for(let i=0; i<tbody.rows.length; i++){
-        if(tbody.rows[i].cells[0].innerHTML === processes[clock].pid){
-            tbody.rows[i].cells[5].innerHTML = 'Terminado'
-            // tbody.deleteRow(i);
-        }
-    }
+
 }
 
 // QUANTUM FUNCTIONS
 // General Quantum
 function roundRobin(general_quantum, cycle, residual, remaining) {
-    // let table = document.getElementsByTagName("table")[0];
-    // let tbody = table.getElementsByTagName("tbody")[0];
+    let table = document.getElementsByTagName("table")[0];
+    let tbody = table.getElementsByTagName("tbody")[0];
     if (general_quantum){
-        console.log("General");
+        // console.log("General");
         let q = document.getElementById("quantum");
         let quantum = parseInt(q.options[q.selectedIndex].text);
         let steps = iterations(quantum, remaining);
         let suspended = [];
-        let finished = [];
 
         function repeat() {
+            if (cycle <= processes.length){
+                for(let i=0; i < tbody.rows.length; i++){
+                    for (let j = 0; j < finished.length; j++) {
+                        if(tbody.rows[i].cells[0].innerHTML === finished[j]){
+                            tbody.rows[i].cells[5].innerHTML = 'Terminado';
+                            tbody.rows[i].cells[5].style.backgroundColor="#2d5faa";
+                            tbody.rows[i].cells[5].style.color="#b1b2b8";
+                        }
+                    }
+                }
+            }
+            if (cycle <= processes.length){
+                for(let i=0; i < tbody.rows.length; i++){
+                    for (let j = 0; j < suspended.length; j++) {
+                        if(tbody.rows[i].cells[0].innerHTML === suspended[j]){
+                            tbody.rows[i].cells[5].innerHTML = 'Suspendido';
+                            tbody.rows[i].cells[5].style.backgroundColor="#e3742d";
+                            tbody.rows[i].cells[5].style.color="#222225";
+                        }
+                    }
+                }
+            }
             document.getElementById('suspended').value = suspended;
             document.getElementById('finished').value = finished;
             if (remaining[cycle] > quantum){
@@ -83,7 +109,9 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                 remaining[cycle] -= quantum;
                 document.getElementById('running').value = processes[cycle].pid;
                 suspended.push(processes[cycle].pid);
+
             } else if (quantum >= remaining[cycle]) {
+
                 residual = remaining[cycle];
                 remaining[cycle] = 0;
                 finished.push(processes[cycle].pid);
@@ -99,6 +127,15 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                         if (remaining[i] === 0){
                             suspended.splice(0,1);
                             finished.push(processes[i].pid);
+                            for(let i=0; i < tbody.rows.length; i++){
+                                for (let j = 0; j < finished.length; j++) {
+                                    if(tbody.rows[i].cells[0].innerHTML === finished[j]){
+                                        tbody.rows[i].cells[5].innerHTML = 'Terminado';
+                                        tbody.rows[i].cells[5].style.backgroundColor="#2d5faa";
+                                        tbody.rows[i].cells[5].style.color="#b1b2b8";
+                                    }
+                                }
+                            }
                         }
                         document.getElementById('running').value = processes[i].pid;
                         break
@@ -123,8 +160,29 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
         let quantum = quantums(processes);
         let steps = iterations(quantum, remaining);
         let suspended = [];
-        let finished = [];
         function repeatQuantum() {
+            if (cycle <= processes.length){
+                for(let i=0; i < tbody.rows.length; i++){
+                    for (let j = 0; j < finished.length; j++) {
+                        if(tbody.rows[i].cells[0].innerHTML === finished[j]){
+                            tbody.rows[i].cells[5].innerHTML = 'Terminado';
+                            tbody.rows[i].cells[5].style.backgroundColor="#2d5faa";
+                            tbody.rows[i].cells[5].style.color="#b1b2b8";
+                        }
+                    }
+                }
+            }
+            if (cycle <= processes.length){
+                for(let i=0; i < tbody.rows.length; i++){
+                    for (let j = 0; j < suspended.length; j++) {
+                        if(tbody.rows[i].cells[0].innerHTML === suspended[j]){
+                            tbody.rows[i].cells[5].innerHTML = 'Suspendido';
+                            tbody.rows[i].cells[5].style.backgroundColor="#e3742d";
+                            tbody.rows[i].cells[5].style.color="#222225";
+                        }
+                    }
+                }
+            }
             document.getElementById('suspended').value = suspended;
             document.getElementById('finished').value = finished;
             if (remaining[cycle] > quantum[cycle]){
@@ -148,6 +206,15 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                         if (remaining[i] === 0){
                             suspended.splice(0,1);
                             finished.push(processes[i].pid);
+                            for(let i=0; i < tbody.rows.length; i++){
+                                for (let j = 0; j < finished.length; j++) {
+                                    if(tbody.rows[i].cells[0].innerHTML === finished[j]){
+                                        tbody.rows[i].cells[5].innerHTML = 'Terminado';
+                                        tbody.rows[i].cells[5].style.backgroundColor="#2d5faa";
+                                        tbody.rows[i].cells[5].style.color="#b1b2b8";
+                                    }
+                                }
+                            }
                         }
                         document.getElementById('running').value = processes[i].pid;
                         break
@@ -223,16 +290,19 @@ function run() {
     let selection = algorithm.options[algorithm.selectedIndex].value;
     if (selection === "1"){
         // console.log("FIFO");
+        finished = [];
         let remaining = remainingTime(processes);
         sortByArrival(processes);
         timed(remaining);
     } else if (selection === "2"){
         // console.log("PRIORITY");
+        finished = [];
         let remaining = remainingTime(processes);
         sortByPriority(processes);
         timed(remaining);
     } else if (selection === "3"){
         // console.log("ROUND ROBIN");
+        finished = [];
         sortByArrival(processes);
         let general_quantum = false;
         let remaining = remainingTime(processes);
@@ -246,12 +316,19 @@ function run() {
         roundRobin(general_quantum, cycle, residual, remaining)
     } else if (selection === "4"){
         // console.log("SJF");
+        finished = [];
         let remaining = remainingTime(processes);
         sortByBurst(processes);
         timed(remaining);
     }
 }
-
+function getMemoryArr(objArr) {
+    let arr = [];
+    for (let i = 0; i < processes.length ; i++) {
+        arr.push(parseInt(objArr[i].memory))
+    }
+    return arr;
+}
 
 // Go back to processes list view
 function goBack() {
@@ -269,20 +346,56 @@ function reload() {
     document.getElementById('suspended').value = '';
 }
 
+//
+function pause() {
+    stop()
+    
+
+}
+
+function kill() {
+
+}
+
+
+
 var vm = new Vue({
     el: '#simulator',
     data: {
         rows: processes,
-        show: true
+        show: true,
+        used_memory: '',
+        total_memory: mem
     },
     methods:{
         reloadTable(){
+            this.used_memory = this.getMemory();
             var self = this;
             self.show = false;
             Vue.nextTick(function (){
                 console.log("re-render");
                 self.show = true;
             })
+        },
+        getMemory(){
+            let used = 0;
+            for (let i = 0; i < processes.length; i++) {
+                used += parseInt(processes[i].memory)
+            }
+            return used
+        },
+        freeSpace(memoryArr){
+            for (let i = 0; i < memoryArr.length ; i++) {
+                if (finished[i] === processes[i].pid){
+                    this.used_memory -= memoryArr[i];
+                    memoryArr[i] = 0;
+                }
+            }
         }
+    },
+    created() {
+        this.used_memory = this.getMemory();
+        let memoryArr = getMemoryArr(processes);
+        this.interval = setInterval(() => this.freeSpace(memoryArr), 5000);
     }
 });
