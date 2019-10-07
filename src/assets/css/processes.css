@@ -14,6 +14,7 @@
     /* Position the tooltip */
     position: absolute;
     z-index: 1;
+    right: 20px;
 }
 
 .tooltip-message:hover .message {
