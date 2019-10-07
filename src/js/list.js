@@ -1,5 +1,6 @@
 const Swal = require('sweetalert2');
 const json = require('../../utils/fake_processes.json');
+const mem = require('../../utils/memory.json');
 const fs = require('fs');
 
 var vm = new Vue({
@@ -8,7 +9,6 @@ var vm = new Vue({
         newProcessAttrs: {
             process: '',
             pid: '',
-            state: '',
             priority: '',
             memory: '',
             burst: '',
@@ -16,6 +16,7 @@ var vm = new Vue({
             quantum: ''
         },
         rows: json,
+        memory: mem
     },
     methods: {
         addProcess() {
@@ -23,16 +24,12 @@ var vm = new Vue({
                 input: 'text',
                 confirmButtonText: 'Next &rarr;',
                 showCancelButton: true,
-                progressSteps: ['1', '2', '3', '4', '5', '6', '7', '8']
+                progressSteps: ['1', '2', '3', '4', '5', '6', '7']
             }).queue([
                 {
                     title: 'Nombre del Proceso'
                 },
                 'PID',
-                {
-                    title: 'Estado',
-                    text: '1,2,3'
-                },
                 'Prioridad',
                 'Memoria',
                 'Tiempo',
@@ -46,12 +43,12 @@ var vm = new Vue({
                     });
                     this.newProcessAttrs.process = result.value[0];
                     this.newProcessAttrs.pid = result.value[1];
-                    this.newProcessAttrs.state = result.value[2];
-                    this.newProcessAttrs.priority = result.value[3];
-                    this.newProcessAttrs.memory = result.value[4];
-                    this.newProcessAttrs.burst = result.value[5];
-                    this.newProcessAttrs.arrival = result.value[6];
-                    this.newProcessAttrs.quantum = result.value[7];
+
+                    this.newProcessAttrs.priority = result.value[2];
+                    this.newProcessAttrs.memory = result.value[3];
+                    this.newProcessAttrs.burst = result.value[4];
+                    this.newProcessAttrs.arrival = result.value[5];
+                    this.newProcessAttrs.quantum = result.value[6];
                     this.rows.push(JSON.parse(JSON.stringify(this.newProcessAttrs)))
                 }
             })
@@ -67,7 +64,13 @@ var vm = new Vue({
         exportList(){
             fs.writeFile("utils/fake_processes.json", JSON.stringify(this.rows), (err) =>{
                 if (err) throw err;
-                console.log('JSON updated!');
+                console.log('fake_processes.json updated!');
+            });
+            let r = document.getElementById("ram");
+            this.memory = r.options[r.selectedIndex].text;
+            fs.writeFile("utils/memory.json", JSON.stringify(this.memory), (err) =>{
+                if (err) throw err;
+                console.log('memory.json updated!');
             });
         }
     }
