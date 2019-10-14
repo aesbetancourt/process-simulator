@@ -82,11 +82,12 @@
                             <thead>
                             <tr>
                                 <th>PID</th>
-                                <th>Llegada</th>
-                                <th>Prioridad</th>
-                                <th>Rafaga</th>
+                                <th>A</th>
+                                <th>P</th>
+                                <th>T</th>
                                 <th>Q</th>
-                                <th>Estado</th>
+                                <th>Device</th>
+                                <th>Status</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -96,6 +97,7 @@
                                 <td>{{row.priority}}</td>
                                 <td>{{row.burst}}</td>
                                 <td>{{row.quantum}}</td>
+                                <td>{{row.device}}</td>
                                 <td>{{"Esperando"}}</td>
                             </tr>
                             </tbody>
@@ -137,11 +139,11 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <button class="btn btn-primary coolbtn" type="button" onclick="pause()">
+                        <button class="btn btn-primary coolbtn" type="button" onclick="pause()" disabled>
                             <i class="fas fa-pause"></i>
                             Parar
                         </button>
-                        <button class="btn btn-primary coolbtn" type="button" onclick="kill()">
+                        <button class="btn btn-primary coolbtn" type="button" onclick="kill()" disabled>
                             <i class="fas fa-skull-crossbones"></i>
                             Matar
                         </button>

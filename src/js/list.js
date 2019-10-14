@@ -13,7 +13,8 @@ var vm = new Vue({
             memory: '',
             burst: '',
             arrival: '',
-            quantum: ''
+            quantum: '',
+            device: '',
         },
         rows: json,
         memory: mem
@@ -23,18 +24,39 @@ var vm = new Vue({
             Swal.mixin({
                 input: 'text',
                 confirmButtonText: 'Next &rarr;',
+                width: 700,
                 showCancelButton: true,
-                progressSteps: ['1', '2', '3', '4', '5', '6', '7']
+                progressSteps: ['1', '2', '3', '4', '5', '6', '7', '8']
             }).queue([
                 {
                     title: 'Nombre del Proceso'
                 },
                 'PID',
-                'Prioridad',
-                'Memoria',
-                'Tiempo',
-                'Llegada',
-                'Quantum'
+                {
+                    title: 'Prioridad',
+                    html: "<strong>Tiempo Real:</strong> 24\n <strong>Alta:</strong> 13\n <strong>Media:</strong> 10\n " +
+                        "<strong>Normal:</strong> 8\n <strong>Baja:</strong> 6\n <strong>Background:</strong> 4\n <strong>Idle:</strong> 4"
+                },
+                {
+                    title: 'Memoria',
+                    text: 'En KB segun el dispositivo que use.'
+                },
+                {
+                    title: 'Rafaga',
+                    text: 'Tiempo (s) que tarda el proceso en ejecutarse en CPU'
+                },
+                {
+                    title: 'Llegada',
+                    text: 'Orden de llegada del proceso'
+                },
+                {
+                    title: 'Quantum',
+                    text: 'Individual por proceso (RR)'
+                },
+                {
+                    title: 'Dispositivo',
+                    text: ''
+                }
             ]).then((result) => {
                 if (result.value) {
                     Swal.fire({
@@ -43,12 +65,12 @@ var vm = new Vue({
                     });
                     this.newProcessAttrs.process = result.value[0];
                     this.newProcessAttrs.pid = result.value[1];
-
                     this.newProcessAttrs.priority = result.value[2];
                     this.newProcessAttrs.memory = result.value[3];
                     this.newProcessAttrs.burst = result.value[4];
                     this.newProcessAttrs.arrival = result.value[5];
                     this.newProcessAttrs.quantum = result.value[6];
+                    this.newProcessAttrs.device = result.value[7];
                     this.rows.push(JSON.parse(JSON.stringify(this.newProcessAttrs)))
                 }
             })

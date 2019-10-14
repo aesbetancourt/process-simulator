@@ -15,7 +15,7 @@ function sortByArrival(arr){
 function sortByPriority(arr) {
     clock = 0;
     arr.sort((a, b) =>{
-        return a.priority - b.priority
+        return b.priority - a.priority
     })
 }
 
