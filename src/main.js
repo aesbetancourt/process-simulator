@@ -15,10 +15,10 @@ function createWindow () {
     });
     mainWindow.setMenu(null);
     // and load the index.html of the app.
-    mainWindow.loadFile('views/simulator.html');
+    mainWindow.loadFile('views/processes.html');
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
