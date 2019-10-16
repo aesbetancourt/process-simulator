@@ -40,9 +40,9 @@ function timed(remainingArr) {
         if (clock !== 0){
             for(let i=0; i< tbody.rows.length; i++){
                 if(tbody.rows[i].cells[0].innerHTML === processes[clock-1].pid){
-                    tbody.rows[i].cells[5].innerHTML = 'Terminado';
-                    tbody.rows[i].cells[5].style.backgroundColor="#2d5faa";
-                    tbody.rows[i].cells[5].style.color="#b1b2b8";
+                    tbody.rows[i].cells[6].innerHTML = 'Terminado';
+                    tbody.rows[i].cells[6].style.backgroundColor="#2d5faa";
+                    tbody.rows[i].cells[6].style.color="#b1b2b8";
                 }
             }
         }
@@ -84,9 +84,9 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                 for(let i=0; i < tbody.rows.length; i++){
                     for (let j = 0; j < finished.length; j++) {
                         if(tbody.rows[i].cells[0].innerHTML === finished[j]){
-                            tbody.rows[i].cells[5].innerHTML = 'Terminado';
-                            tbody.rows[i].cells[5].style.backgroundColor="#2d5faa";
-                            tbody.rows[i].cells[5].style.color="#b1b2b8";
+                            tbody.rows[i].cells[6].innerHTML = 'Terminado';
+                            tbody.rows[i].cells[6].style.backgroundColor="#2d5faa";
+                            tbody.rows[i].cells[6].style.color="#b1b2b8";
                         }
                     }
                 }
@@ -95,9 +95,9 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                 for(let i=0; i < tbody.rows.length; i++){
                     for (let j = 0; j < suspended.length; j++) {
                         if(tbody.rows[i].cells[0].innerHTML === suspended[j]){
-                            tbody.rows[i].cells[5].innerHTML = 'Suspendido';
-                            tbody.rows[i].cells[5].style.backgroundColor="#e3742d";
-                            tbody.rows[i].cells[5].style.color="#222225";
+                            tbody.rows[i].cells[6].innerHTML = 'Suspendido';
+                            tbody.rows[i].cells[6].style.backgroundColor="#e3742d";
+                            tbody.rows[i].cells[6].style.color="#222225";
                         }
                     }
                 }
@@ -130,9 +130,9 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                             for(let i=0; i < tbody.rows.length; i++){
                                 for (let j = 0; j < finished.length; j++) {
                                     if(tbody.rows[i].cells[0].innerHTML === finished[j]){
-                                        tbody.rows[i].cells[5].innerHTML = 'Terminado';
-                                        tbody.rows[i].cells[5].style.backgroundColor="#2d5faa";
-                                        tbody.rows[i].cells[5].style.color="#b1b2b8";
+                                        tbody.rows[i].cells[6].innerHTML = 'Terminado';
+                                        tbody.rows[i].cells[6].style.backgroundColor="#2d5faa";
+                                        tbody.rows[i].cells[6].style.color="#b1b2b8";
                                     }
                                 }
                             }
@@ -165,9 +165,9 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                 for(let i=0; i < tbody.rows.length; i++){
                     for (let j = 0; j < finished.length; j++) {
                         if(tbody.rows[i].cells[0].innerHTML === finished[j]){
-                            tbody.rows[i].cells[5].innerHTML = 'Terminado';
-                            tbody.rows[i].cells[5].style.backgroundColor="#2d5faa";
-                            tbody.rows[i].cells[5].style.color="#b1b2b8";
+                            tbody.rows[i].cells[6].innerHTML = 'Terminado';
+                            tbody.rows[i].cells[6].style.backgroundColor="#2d5faa";
+                            tbody.rows[i].cells[6].style.color="#b1b2b8";
                         }
                     }
                 }
@@ -176,9 +176,9 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                 for(let i=0; i < tbody.rows.length; i++){
                     for (let j = 0; j < suspended.length; j++) {
                         if(tbody.rows[i].cells[0].innerHTML === suspended[j]){
-                            tbody.rows[i].cells[5].innerHTML = 'Suspendido';
-                            tbody.rows[i].cells[5].style.backgroundColor="#e3742d";
-                            tbody.rows[i].cells[5].style.color="#222225";
+                            tbody.rows[i].cells[6].innerHTML = 'Suspendido';
+                            tbody.rows[i].cells[6].style.backgroundColor="#e3742d";
+                            tbody.rows[i].cells[6].style.color="#222225";
                         }
                     }
                 }
@@ -209,9 +209,9 @@ function roundRobin(general_quantum, cycle, residual, remaining) {
                             for(let i=0; i < tbody.rows.length; i++){
                                 for (let j = 0; j < finished.length; j++) {
                                     if(tbody.rows[i].cells[0].innerHTML === finished[j]){
-                                        tbody.rows[i].cells[5].innerHTML = 'Terminado';
-                                        tbody.rows[i].cells[5].style.backgroundColor="#2d5faa";
-                                        tbody.rows[i].cells[5].style.color="#b1b2b8";
+                                        tbody.rows[i].cells[6].innerHTML = 'Terminado';
+                                        tbody.rows[i].cells[6].style.backgroundColor="#2d5faa";
+                                        tbody.rows[i].cells[6].style.color="#b1b2b8";
                                     }
                                 }
                             }
